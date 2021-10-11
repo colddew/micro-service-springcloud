@@ -11,10 +11,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <kotlin.version>1.5.31</kotlin.version>
-        <jackson.module.kotlin.version>2.13.0</jackson.module.kotlin.version>
         <spring-boot.version>2.5.5</spring-boot.version>
-<!--        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>-->
+        <spring-cloud.version>2020.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
+        <kotlin.version>1.5.31</kotlin.version>
+        <jackson-module-kotlin.version>2.13.0</jackson-module-kotlin.version>
     </properties>
 
     <dependencyManagement>
@@ -27,13 +28,21 @@
                 <scope>import</scope>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
-<!--                <version>${spring-cloud.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -48,7 +57,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-kotlin</artifactId>
-                <version>${jackson.module.kotlin.version}</version>
+                <version>${jackson-module-kotlin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -111,5 +120,6 @@
         <module>micro-service-server1</module>
         <module>micro-service-server2</module>
         <module>micro-service-server3</module>
+        <module>micro-service-combination</module>
     </modules>
 </project>

@@ -1,0 +1,29 @@
+server:
+  port: 8010
+
+spring:
+  application:
+    name: combination
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: server3
+          uri: lb://server3
+          predicates:
+            - Path=/**
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'health,info,loggers,refresh'
+  endpoint:
+    health:
+      show-details: always
