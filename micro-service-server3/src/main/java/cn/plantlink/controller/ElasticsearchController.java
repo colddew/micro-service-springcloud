@@ -1,7 +1,10 @@
 package cn.plantlink.controller;
 
+import cn.plantlink.pojo.Info;
 import cn.plantlink.pojo.Product;
 import cn.plantlink.service.ElasticsearchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,8 @@ import java.util.List;
  */
 @RestController
 public class ElasticsearchController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ElasticsearchController.class);
 
     @Autowired
     private ElasticsearchService elasticsearchService;
@@ -40,5 +45,30 @@ public class ElasticsearchController {
     @DeleteMapping("/product/{productId}")
     public String deleteProduct(@PathVariable("productId") String productId) throws Exception {
         return elasticsearchService.deleteProduct(productId);
+    }
+
+    @GetMapping("/info")
+    public List<Info> getInfoList() throws Exception {
+        return elasticsearchService.getInfoList();
+    }
+
+    @GetMapping("/info/{infoId}")
+    public Info getInfo(@PathVariable("infoId") String infoId) throws Exception {
+        return elasticsearchService.getInfo(infoId);
+    }
+
+    @PostMapping("/info")
+    public String addInfo() throws Exception {
+        return elasticsearchService.addInfo();
+    }
+
+    @PutMapping("/info/{infoId}")
+    public String modifyInfo(@PathVariable("infoId") String infoId) throws Exception {
+        return elasticsearchService.modifyInfo();
+    }
+
+    @DeleteMapping("/info/{infoId}")
+    public String deleteInfo(@PathVariable("infoId") String infoId) throws Exception {
+        return elasticsearchService.deleteInfo(infoId);
     }
 }
