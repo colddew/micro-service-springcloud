@@ -5,10 +5,15 @@ import cn.plantlink.common.InfoSearchType;
 import cn.plantlink.pojo.Info;
 import cn.plantlink.pojo.Product;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.Refresh;
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.FunctionBoostMode;
+import co.elastic.clients.elasticsearch._types.query_dsl.FunctionScore;
+import co.elastic.clients.elasticsearch._types.query_dsl.FunctionScoreMode;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.json.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,17 +108,17 @@ public class ElasticsearchService {
 
     public List<Info> getInfoList() throws Exception {
 
-        SearchResponse<Info> search = elasticsearchClient.search(s -> s
-                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
-                        .query(q -> q
-                                .range(r -> r
-                                        .field("releaseTime")
-                                        .gt(JsonData.of("now-10d/d"))
-                                        .lt(JsonData.of("2022-01-27 20:08:10"))
-                                        .format("yyyy-MM-dd HH:mm:ss")
-                                        .timeZone("+08:00")
-                                )),
-                Info.class);
+//        SearchResponse<Info> search = elasticsearchClient.search(s -> s
+//                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
+//                        .query(q -> q
+//                                .range(r -> r
+//                                        .field("releaseTime")
+//                                        .gt(JsonData.of("now-10d/d"))
+//                                        .lt(JsonData.of("2022-01-27 20:08:10"))
+//                                        .format("yyyy-MM-dd HH:mm:ss")
+//                                        .timeZone("+08:00")
+//                                )),
+//                Info.class);
 
 //        SearchResponse<Info> search = elasticsearchClient.search(s -> s
 //                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
@@ -124,6 +129,165 @@ public class ElasticsearchService {
 //                                        .lt(JsonData.of("now"))
 //                                )),
 //                Info.class);
+
+//        SearchResponse<Info> search = elasticsearchClient.search(s -> s
+//                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
+//                        .query(q -> q
+//                                .bool(b -> b
+//                                    .must(m -> m
+//                                            .terms(t -> t
+//                                                    .field("type")
+//                                                    .terms(tf -> tf
+//                                                        .value(Arrays.asList(FieldValue.of(3), FieldValue.of(2)))
+//                                                    )
+//                                            )
+//                                    )
+//                                )
+//                        ),
+//                Info.class);
+
+        String keyword = "专栏";
+        List<FieldValue> types = Arrays.asList(InfoSearchType.COLUMN, InfoSearchType.USER_ARTICLE)
+                .stream().map(p -> FieldValue.of(p.getValue())).collect(Collectors.toList());
+
+        SearchResponse<Info> search = elasticsearchClient.search(s -> s
+                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
+                        .query(q -> q
+                                .functionScore(f -> f
+                                        .query(qy -> qy
+                                                .bool(b -> b
+                                                        .must(Query.of(mq -> mq
+                                                                        .terms(t -> t
+                                                                                .field("type")
+                                                                                .terms(tf -> tf.value(types)))),
+                                                                Query.of(mq -> mq
+                                                                        .multiMatch(mm -> mm.query(keyword)
+                                                                                .fields("title", "content", "stockCodes",
+                                                                                        "stockNames", "stockSpellCodes"))))
+                                                        .boost(1.0f)))
+
+
+//                                        .functions(fn -> fn.fieldValueFactor(ff -> ff
+//                                                .field("likeQuantity")
+//                                                .factor(1.2)
+//                                                .modifier(FieldValueFactorModifier.Log1p)
+//                                                .missing(1.0)
+//                                        ).weight(1.0))
+
+
+//                                        .functions(fs -> fs
+//                                                .scriptScore(sf -> sf
+//                                                        .script(ss -> ss
+//                                                                .inline(i -> i
+//                                                                        .source("1.0")))
+//                                                ).weight(1.0))
+
+
+//                                        .functions(FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .terms(t -> t
+//                                                                        .field("type")
+//                                                                        .terms(tf -> tf.value(types))))
+//                                                        .weight(1.0).new ContainerBuilder()),
+//                                                FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .match(m -> m.field("title")
+//                                                                        .query(FieldValue.of(keyword))))
+//                                                        .weight(100.0).new ContainerBuilder()),
+//                                                FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .match(m -> m.field("stockCodes")
+//                                                                        .query(FieldValue.of(keyword))))
+//                                                        .weight(10.0).new ContainerBuilder()),
+//                                                FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .match(m -> m.field("stockNames")
+//                                                                        .query(FieldValue.of(keyword))))
+//                                                        .weight(10.0).new ContainerBuilder()),
+//                                                FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .match(m -> m.field("stockSpellCodes")
+//                                                                        .query(FieldValue.of(keyword))))
+//                                                        .weight(10.0).new ContainerBuilder()),
+//                                                FunctionScore.of(fs -> fs
+//                                                        .filter(ff -> ff
+//                                                                .match(m -> m.field("content")
+//                                                                        .query(FieldValue.of(keyword))))
+//                                                        .weight(5.0).new ContainerBuilder()))
+
+
+                                        .functions(FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .terms(t -> t
+                                                                        .field("type")
+                                                                        .terms(tf -> tf.value(types))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(1.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("title")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(100.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("stockCodes")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(10.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("stockNames")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(10.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("stockSpellCodes")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(10.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("content")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(5.0)))
+
+
+                                        .scoreMode(FunctionScoreMode.Sum)
+                                        .boostMode(FunctionBoostMode.Multiply)
+                                        .maxBoost(130.0)
+                                        .boost(1.0f)))
+                        .sort(SortOptions.of(so -> so
+                                        .field(fs -> fs
+                                                .field("_score")
+                                                .order(SortOrder.Desc))),
+                                SortOptions.of(so -> so
+                                        .field(fs -> fs
+                                                .field("releaseTime")
+                                                .order(SortOrder.Desc))))
+                        .from(BusinessConstants.PAGINATION_PAGE_NO_DEFAULT - 1)
+                        .size(BusinessConstants.PAGINATION_PAGE_SIZE_DEFAULT - 1),
+                Info.class);
 
         return search.hits().hits().stream().map(p -> p.source()).collect(Collectors.toList());
     }
