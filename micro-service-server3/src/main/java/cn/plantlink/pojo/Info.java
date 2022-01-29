@@ -1,5 +1,7 @@
 package cn.plantlink.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,18 +12,20 @@ import java.util.List;
 public class Info {
 
     private String contentId;
-    private int type;
+    private Integer type;
     private String title;
     private String content;
     private String nickname;
     private String authorId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date releaseTime;
     private List<String> stockCodes;
     private List<String> stockNames;
     private List<String> stockSpellCodes;
     private List<String> tags;
-    private int isHide;
+    private Integer isHide;
 
     public String getContentId() {
         return contentId;
@@ -31,11 +35,11 @@ public class Info {
         this.contentId = contentId;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -119,11 +123,11 @@ public class Info {
         this.tags = tags;
     }
 
-    public int getIsHide() {
+    public Integer getIsHide() {
         return isHide;
     }
 
-    public void setIsHide(int isHide) {
+    public void setIsHide(Integer isHide) {
         this.isHide = isHide;
     }
 }

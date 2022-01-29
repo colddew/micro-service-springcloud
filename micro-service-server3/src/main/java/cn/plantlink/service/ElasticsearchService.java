@@ -94,15 +94,8 @@ public class ElasticsearchService {
         return delete.id();
     }
 
-    public void sort() throws Exception {
-        SearchRequest.of(r -> r
-                .index("idx-d")
-                .sort(s -> s.field(f -> f.field("foo").order(SortOrder.Asc)))
-                .sort(s -> s.field(f -> f.field("bar").order(SortOrder.Desc)))
-        );
-    }
-
     // ---------- product end ----------
+
 
     // ---------- info start ----------
 
@@ -146,7 +139,7 @@ public class ElasticsearchService {
 //                        ),
 //                Info.class);
 
-        String keyword = "专栏";
+        String keyword = "喜欢";
         List<FieldValue> types = Arrays.asList(InfoSearchType.COLUMN, InfoSearchType.USER_ARTICLE)
                 .stream().map(p -> FieldValue.of(p.getValue())).collect(Collectors.toList());
 
@@ -359,6 +352,27 @@ public class ElasticsearchService {
         UpdateResponse<Info> update = elasticsearchClient.update(b -> b
                         .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
                         .id(infoId)
+                        .doc(info),
+                Info.class);
+
+        return update.id();
+    }
+
+    public String upsert() throws Exception {
+
+        Info info = new Info();
+        info.setTitle("同学老是喜欢说教别人改个标题");
+        info.setReleaseTime(new Date());
+
+        return upsert(info, "1:00006214238e41b4a17188b95d2571d5");
+    }
+
+    public String upsert(Info info, String infoId) throws Exception {
+
+        UpdateResponse<Info> update = elasticsearchClient.update(b -> b
+                        .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
+                        .id(infoId)
+                        .docAsUpsert(true)
                         .doc(info),
                 Info.class);
 

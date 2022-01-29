@@ -67,6 +67,11 @@ public class ElasticsearchController {
         return elasticsearchService.modifyInfo();
     }
 
+    @PutMapping("/info")
+    public String upsertInfo() throws Exception {
+        return elasticsearchService.upsert();
+    }
+
     @DeleteMapping("/info/{infoId}")
     public String deleteInfo(@PathVariable("infoId") String infoId) throws Exception {
         return elasticsearchService.deleteInfo(infoId);
