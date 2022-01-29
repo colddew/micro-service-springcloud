@@ -363,8 +363,13 @@ public class ElasticsearchService {
         Info info = new Info();
         info.setTitle("同学老是喜欢说教别人改个标题");
         info.setReleaseTime(new Date());
+        upsert(info, "1:00006214238e41b4a17188b95d2571d5");
 
-        return upsert(info, "1:00006214238e41b4a17188b95d2571d5");
+        Info info2 = new Info();
+        info2.setIsHide(1);
+        info2.setReleaseTime(new Date());
+
+        return upsert(info2, "1:00006214238e41b4a17188b95d2571d5");
     }
 
     public String upsert(Info info, String infoId) throws Exception {

@@ -4,6 +4,7 @@ import cn.plantlink.common.BusinessConstants;
 import cn.plantlink.config.CanalClientProperties;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
+import com.alibaba.otter.canal.common.utils.AddressUtils;
 import com.alibaba.otter.canal.protocol.CanalEntry.*;
 import com.alibaba.otter.canal.protocol.Message;
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,6 +41,12 @@ public class ExampleCanalClientService {
 //    @PostConstruct
     private void init() throws Exception {
 
+        // support server failover locally
+//        canalConnector = CanalConnectors.newClusterConnector(Arrays.asList(new InetSocketAddress("59.110.124.213", 11111),
+//                new InetSocketAddress("39.106.229.248", 11111)),
+//                canalClientProperties.getCanalDestinationExample(), "", "");
+
+        // support server/client failover by zookeeper
         canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
                 canalClientProperties.getCanalDestinationExample(), "", "");
         canalConnector.connect();
