@@ -341,7 +341,7 @@ public class ElasticsearchService {
     public String modifyInfo() throws Exception {
 
         Info info = new Info();
-        info.setTitle("同学老是喜欢说教别人改个标题");
+        info.setTitle("同学老是喜欢说教别人改个标题2");
         info.setReleaseTime(new Date());
 
         return modifyInfo(info, "1:00006214238e41b4a17188b95d2571d5");
@@ -361,7 +361,7 @@ public class ElasticsearchService {
     public String upsert() throws Exception {
 
         Info info = new Info();
-        info.setTitle("同学老是喜欢说教别人改个标题");
+        info.setTitle("同学老是喜欢说教别人改个标题3");
         info.setReleaseTime(new Date());
         upsert(info, "1:00006214238e41b4a17188b95d2571d5");
 

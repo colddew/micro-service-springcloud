@@ -6,3 +6,4 @@ microservice based on springcloud alibaba
 - [x] Nacos
 - [x] Elasticsearch
 - [x] Canal
+- [ ] Javassist
