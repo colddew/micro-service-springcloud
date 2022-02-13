@@ -57,6 +57,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 重写官方ES客户端原有方法
+ * 
+ * ES官方版本兼容性说明: https://www.elastic.co/guide/en/elasticsearch/reference/current/api-conventions.html#api-compatibility
+ */
 public class RestClientTransport implements ElasticsearchTransport {
 
     static final ContentType JsonContentType;
