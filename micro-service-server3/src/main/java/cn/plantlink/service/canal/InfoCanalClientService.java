@@ -28,7 +28,7 @@ public class InfoCanalClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExampleCanalClientService.class);
 
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 20;
 
     @Autowired
     private CanalClientProperties canalClientProperties;
@@ -44,12 +44,12 @@ public class InfoCanalClientService {
         canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
                 canalClientProperties.getCanalDestinationInfo(), "", "");
         canalConnector.connect();
-        canalConnector.subscribe("shizhifengyundb\\.tb_article," +
-                "shizhifengyundb\\.t_article_stock," +
-                "shizhifengyundb\\.tb_moments," +
-                "shizhifengyundb\\.t_non_text," +
-                "cailianpress\\.article," +
-                "cailianpress\\.article_stock");
+        canalConnector.subscribe("shizhifengyundb.tb_article," +
+                "shizhifengyundb.t_article_stock," +
+                "shizhifengyundb.tb_moments," +
+                "shizhifengyundb.t_non_text," +
+                "cailianpress.article," +
+                "cailianpress.article_stock");
 
         CompletableFuture.runAsync(() -> {
             try {

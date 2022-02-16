@@ -31,7 +31,7 @@ public class ExampleCanalClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExampleCanalClientService.class);
 
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 20;
 
     @Autowired
     private CanalClientProperties canalClientProperties;
@@ -79,6 +79,7 @@ public class ExampleCanalClientService {
                 } else {
                     logger.info("fetch message from {}, batchId: {}, size: {}", canalClientProperties.getCanalDestinationExample(), batchId, size);
                     dispatch(message.getEntries());
+                    Thread.sleep(1000);
                 }
 
                 if (batchId != -1) {
