@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class InfoCanalClientService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExampleCanalClientService.class);
+    private static final Logger logger = LoggerFactory.getLogger(InfoCanalClientService.class);
 
     private static final int BATCH_SIZE = 20;
 
@@ -76,7 +75,7 @@ public class InfoCanalClientService {
                         // do nothing
                     }
                 } else {
-                    logger.info("fetch message from {}, batchId: {}, size: {}", canalClientProperties.getCanalDestinationExample(), batchId, size);
+                    logger.info("fetch message from {}, batchId: {}, size: {}", canalClientProperties.getCanalDestinationInfo(), batchId, size);
                     dispatch(message.getEntries());
                 }
 
