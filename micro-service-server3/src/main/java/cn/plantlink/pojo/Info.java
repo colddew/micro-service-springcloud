@@ -12,20 +12,22 @@ import java.util.List;
 public class Info {
 
     private String contentId;
-    private Integer type;
+    private Integer contentType;
     private String title;
     private String content;
-    private String nickname;
+    private String introduce;
     private String authorId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date releaseTime;
+    private Integer recommend;
     private List<String> stockCodes;
     private List<String> stockNames;
     private List<String> stockSpellCodes;
     private List<String> tags;
-    private Integer isHide;
+    private Double artificialWeight;
+    private Double complexWeight;
 
     public String getContentId() {
         return contentId;
@@ -35,12 +37,12 @@ public class Info {
         this.contentId = contentId;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getContentType() {
+        return contentType;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setContentType(Integer contentType) {
+        this.contentType = contentType;
     }
 
     public String getTitle() {
@@ -59,12 +61,12 @@ public class Info {
         this.content = content;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getIntroduce() {
+        return introduce;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 
     public String getAuthorId() {
@@ -89,6 +91,14 @@ public class Info {
 
     public void setReleaseTime(Date releaseTime) {
         this.releaseTime = releaseTime;
+    }
+
+    public Integer getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(Integer recommend) {
+        this.recommend = recommend;
     }
 
     public List<String> getStockCodes() {
@@ -123,11 +133,19 @@ public class Info {
         this.tags = tags;
     }
 
-    public Integer getIsHide() {
-        return isHide;
+    public Double getArtificialWeight() {
+        return artificialWeight;
     }
 
-    public void setIsHide(Integer isHide) {
-        this.isHide = isHide;
+    public void setArtificialWeight(Double artificialWeight) {
+        this.artificialWeight = artificialWeight;
+    }
+
+    public Double getComplexWeight() {
+        return complexWeight;
+    }
+
+    public void setComplexWeight(Double complexWeight) {
+        this.complexWeight = complexWeight;
     }
 }

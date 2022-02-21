@@ -1,6 +1,7 @@
 package cn.plantlink.service;
 
 import cn.plantlink.common.BusinessConstants;
+import cn.plantlink.common.ExpressRecommend;
 import cn.plantlink.common.InfoSearchType;
 import cn.plantlink.pojo.Info;
 import cn.plantlink.pojo.Product;
@@ -151,12 +152,12 @@ public class ElasticsearchService {
                                                 .bool(b -> b
                                                         .must(Query.of(mq -> mq
                                                                         .terms(t -> t
-                                                                                .field("type")
+                                                                                .field("contentType")
                                                                                 .terms(tf -> tf.value(types)))),
                                                                 Query.of(mq -> mq
                                                                         .multiMatch(mm -> mm.query(keyword)
-                                                                                .fields("title", "content", "stockCodes",
-                                                                                        "stockNames", "stockSpellCodes"))))
+                                                                                .fields("title", "content", "introduce",
+                                                                                        "stockCodes", "stockNames", "stockSpellCodes"))))
                                                         .boost(1.0f)))
 
 
@@ -212,13 +213,22 @@ public class ElasticsearchService {
                                         .functions(FunctionScore.of(fs -> fs
                                                         .filter(ff -> ff
                                                                 .terms(t -> t
-                                                                        .field("type")
+                                                                        .field("contentType")
                                                                         .terms(tf -> tf.value(types))))
                                                         .scriptScore(sf -> sf
                                                                 .script(ss -> ss
                                                                         .inline(i -> i
                                                                                 .source("1.0"))))
                                                         .weight(1.0)),
+                                                FunctionScore.of(fs -> fs
+                                                        .filter(ff -> ff
+                                                                .match(m -> m.field("introduce")
+                                                                        .query(FieldValue.of(keyword))))
+                                                        .scriptScore(sf -> sf
+                                                                .script(ss -> ss
+                                                                        .inline(i -> i
+                                                                                .source("1.0"))))
+                                                        .weight(10.0)),
                                                 FunctionScore.of(fs -> fs
                                                         .filter(ff -> ff
                                                                 .match(m -> m.field("title")
@@ -299,8 +309,9 @@ public class ElasticsearchService {
 
         Info info = new Info();
         info.setContentId("00006214238e41b4a17188b95d2571d5");
-        info.setType(InfoSearchType.COLUMN.getValue());
+        info.setContentType(InfoSearchType.COLUMN.getValue());
         info.setTitle("同学老是喜欢说教别人");
+        info.setIntroduce("同学老是喜欢说教别人标题同学老是喜欢说教别人标题同学老是喜欢说教别人标题");
         info.setContent("<p style=\"word-break: break-all; text-indent: 0px; font-family: 思源黑体 CN Regular; font-size: 16px; line-height: 30px; margin: 20px 0px 20px 0px;\">&nbsp; &nbsp; &nbsp;首先他开了一个小公司，我借钱给他，他忙不过来，叫我回来帮忙，回来一个月，发现他说教的毛病严重，经常看他从抖音，电视剧里面学各种鸡汤。</p>\n" +
                 "<div>&nbsp; &nbsp; &nbsp; 他喜欢吃猪脑汤，我不喜欢吃，没吃完被他说一顿，他说:瘦的人吃猪脑会有恶心的感觉，营养都在猪脑里，傻！点菜的时候都没问我喜欢吃什么，非要跟他一样喜欢吃猪脑，我忍了，不说话。</div>\n" +
                 "<div>&nbsp; &nbsp; &nbsp; &nbsp; 叫我用货车练车的时候说一大堆，刚练一两天就要达到他水平的意思，不满意就对我大吼大叫，这次跟他吵了起来，回来不说话，关灯睡觉。</div>\n" +
@@ -313,15 +324,16 @@ public class ElasticsearchService {
                 "<div>&nbsp; &nbsp; &nbsp; &nbsp;</div>\n" +
                 "<div>&nbsp; &nbsp; &nbsp;</div>\n" +
                 "<div>&nbsp;</div>");
-        info.setNickname("refresh");
         info.setAuthorId("0f511f3e96bd4c228c245b1d7d745758");
         info.setCreateTime(new Date());
         info.setReleaseTime(new Date());
+        info.setRecommend(ExpressRecommend.IMPORTANT.getValue());
         info.setStockCodes(Arrays.asList("万科A", "平安银行"));
         info.setStockNames(Arrays.asList("000002.SZ", "000001.SZ"));
         info.setStockSpellCodes(Arrays.asList("wankeA,wkA", "pinganyinhang,payh"));
         info.setTags(Arrays.asList("专栏", "港股"));
-        info.setIsHide(0);
+        info.setArtificialWeight(5.0);
+        info.setComplexWeight(100.00);
 
         return addInfo(info);
     }
@@ -331,7 +343,7 @@ public class ElasticsearchService {
         CreateResponse create = elasticsearchClient.create(b -> b
                 .index(BusinessConstants.ELASTICSEARCH_INDEX_INFO)
                 .document(info)
-                .id(info.getType() + ":" + info.getContentId())
+                .id(info.getContentType() + ":" + info.getContentId())
                 .refresh(Refresh.True)
         );
 
@@ -366,7 +378,7 @@ public class ElasticsearchService {
         upsert(info, "1:00006214238e41b4a17188b95d2571d5");
 
         Info info2 = new Info();
-        info2.setIsHide(1);
+        info2.setArtificialWeight(55.0);
         info2.setReleaseTime(new Date());
 
         return upsert(info2, "1:00006214238e41b4a17188b95d2571d5");
