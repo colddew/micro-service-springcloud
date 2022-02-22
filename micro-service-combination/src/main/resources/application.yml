@@ -8,16 +8,39 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-#    sentinel:
-#      transport:
-#        port: 7776
-#        dashboard: 127.0.0.1:7777
+  #    sentinel:
+  #      transport:
+  #        port: 7776
+  #        dashboard: 127.0.0.1:7777
   main:
     allow-circular-references: true
 
 feign:
   sentinel:
     enabled: true
+
+#seata:
+#  enabled: true
+#  application-id: ${spring.application.name}
+#  tx-service-group: ${spring.application.name}-group
+#  enable-auto-data-source-proxy: true
+#  config:
+#    type: nacos
+#    nacos:
+#      namespace:
+#      server-addr: 127.0.0.1:8848
+#      group: SEATA_GROUP
+#      userName: "nacos"
+#      password: "nacos"
+#    registry:
+#      type: nacos
+#      nacos:
+#        application: seata-server
+#        server-addr: 127.0.0.1:8848
+#        namespace:
+#        userName: "nacos"
+#        password: "nacos"
+#        group: SEATA_GROUP
 
 management:
   endpoints:

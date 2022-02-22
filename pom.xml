@@ -23,6 +23,7 @@
         <commons.io.version>2.11.0</commons.io.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <spring.kafka.version>2.8.2</spring.kafka.version>
+        <seata.version>1.4.2</seata.version>
     </properties>
 
     <dependencyManagement>
@@ -110,6 +111,12 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
                 <version>${spring.kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
