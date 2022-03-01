@@ -8,6 +8,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+        namespace: dev
+        group: springcloud
+        failure-tolerance-enabled: true
   #    sentinel:
   #      transport:
   #        port: 7776
@@ -41,6 +44,14 @@ feign:
 #        userName: "nacos"
 #        password: "nacos"
 #        group: SEATA_GROUP
+
+dubbo:
+  application:
+    name: dubbo-combination
+  registry:
+    address: nacos://127.0.0.1:8848
+#  protocol:
+#    name: dubbo
 
 management:
   endpoints:

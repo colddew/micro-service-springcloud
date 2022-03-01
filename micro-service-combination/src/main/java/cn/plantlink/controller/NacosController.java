@@ -1,7 +1,9 @@
 package cn.plantlink.controller;
 
 import cn.plantlink.service.EchoService;
+import cn.plantlink.service.dubbo.IHelloService;
 import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,9 @@ public class NacosController {
 
     @Autowired
     private EchoService echoService;
+
+    @DubboReference(group = "springcloud")
+    private IHelloService iHelloService;
 
     @RequestMapping(value = "/restEcho/{string}", method = RequestMethod.GET)
     public String restEcho(@PathVariable String string) {
@@ -44,5 +49,10 @@ public class NacosController {
     @GlobalTransactional(rollbackFor = Exception.class)
     public String seata() throws Exception {
         return "seata";
+    }
+
+    @RequestMapping(value = "/hello/{name}", method = RequestMethod.GET)
+    public String sayHello(@PathVariable String name) {
+        return iHelloService.sayHello(name);
     }
 }
