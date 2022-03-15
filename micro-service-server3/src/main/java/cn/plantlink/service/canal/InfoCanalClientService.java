@@ -131,6 +131,10 @@ public class InfoCanalClientService {
                         entry.getHeader().getGtid(),
                         (new Date().getTime() - executeTime));
 
+                if (EventType.QUERY == eventType || rowChange.getIsDdl()) {
+                    logger.info("sql --> {}", rowChange.getSql());
+                    continue;
+                }
 
                 InfoCanalClientHandler handler = infoCanalClientHandlerFactory.getInstance(schemaName, tableName);
 
