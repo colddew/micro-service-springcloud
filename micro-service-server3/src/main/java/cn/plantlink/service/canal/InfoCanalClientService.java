@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class InfoCanalClientService {
 
     private CanalConnector canalConnector;
 
-//    @PostConstruct
+    @PostConstruct
     private void init() throws Exception {
 
         canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
@@ -47,8 +48,8 @@ public class InfoCanalClientService {
                 "shizhifengyundb.t_article_stock," +
                 "shizhifengyundb.tb_moments," +
                 "shizhifengyundb.t_non_text," +
-                "cailianpress.article," +
-                "cailianpress.article_stock");
+                "shizhifengyundb.t_express," +
+                "shizhifengyundb.t_express_stock");
 
         CompletableFuture.runAsync(() -> {
             try {

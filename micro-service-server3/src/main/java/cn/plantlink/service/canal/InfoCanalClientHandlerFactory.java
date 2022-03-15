@@ -38,9 +38,9 @@ public class InfoCanalClientHandlerFactory {
             return infoCanalClientMomentsHandler;
         } else if (BusinessConstants.DB_SCHEMA_STORM.equalsIgnoreCase(schema) && BusinessConstants.DB_TABLE_MOMENTS_STOCK.equalsIgnoreCase(table)) {
             return infoCanalClientMomentsStockHandler;
-        } else if (BusinessConstants.DB_SCHEMA_EXPRESS.equalsIgnoreCase(schema) && BusinessConstants.DB_TABLE_EXPRESS.equalsIgnoreCase(table)) {
+        } else if (BusinessConstants.DB_SCHEMA_STORM.equalsIgnoreCase(schema) && BusinessConstants.DB_TABLE_EXPRESS.equalsIgnoreCase(table)) {
             return infoCanalClientExpressHandler;
-        } else if (BusinessConstants.DB_SCHEMA_EXPRESS.equalsIgnoreCase(schema) && BusinessConstants.DB_TABLE_EXPRESS_STOCK.equalsIgnoreCase(table)) {
+        } else if (BusinessConstants.DB_SCHEMA_STORM.equalsIgnoreCase(schema) && BusinessConstants.DB_TABLE_EXPRESS_STOCK.equalsIgnoreCase(table)) {
             return infoCanalClientExpressStockHandler;
         } else {
             throw new Exception("不支持该消息处理类型");

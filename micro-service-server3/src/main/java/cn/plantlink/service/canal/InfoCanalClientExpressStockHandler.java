@@ -13,19 +13,19 @@ public class InfoCanalClientExpressStockHandler extends AbstractInfoCanalClientH
 
     @Override
     public void update(RowData rowData) throws Exception {
-        String expressId = getKey(rowData.getAfterColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "article_id");
+        String expressId = getKey(rowData.getAfterColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "express_id");
         // TODO 查询DB同步ES，更新
     }
 
     @Override
     public void insert(RowData rowData) throws Exception {
-        String expressId = getKey(rowData.getAfterColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "article_id");
+        String expressId = getKey(rowData.getAfterColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "express_id");
         // TODO 查询DB同步ES，更新
     }
 
     @Override
     public void delete(RowData rowData) throws Exception {
-        String expressId = getKey(rowData.getBeforeColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "article_id");
+        String expressId = getKey(rowData.getBeforeColumnsList(), BusinessConstants.DB_TABLE_EXPRESS_STOCK, "express_id");
         // TODO 查询DB同步ES，删除（物理）
     }
 }
