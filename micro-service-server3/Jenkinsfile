@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    stages {
+        /* "Build" and "Test" stages omitted */
+
+//         stage('check out') {
+//             steps {
+//                 git branch: 'master', credentialsId: 'github-jenkins-colddew', url: 'https://github.com/colddew/micro-service-springcloud.git'
+//             }
+//         }
+
+        stage('Deploy - Staging') {
+            steps {
+                echo './deploy staging'
+                echo './run-smoke-tests'
+            }
+        }
+
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
+        }
+
+        stage('Deploy - Production') {
+            steps {
+                echo './deploy production'
+            }
+        }
+    }
+}
