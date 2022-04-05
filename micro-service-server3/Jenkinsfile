@@ -1,6 +1,14 @@
 pipeline {
+
     agent any
+
     stages {
+        agent {
+            docker {
+                image 'maven:3.8.4-jdk-8'
+            }
+        }
+
         stage('unit test') {
             steps {
                 echo 'project build...'
@@ -9,6 +17,11 @@ pipeline {
         }
 
         stage('project build') {
+            agent {
+                docker {
+                    image 'maven:3.8.4-jdk-8'
+                }
+            }
             steps {
                 echo 'project build...'
                 sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
@@ -30,6 +43,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             deleteDir()
