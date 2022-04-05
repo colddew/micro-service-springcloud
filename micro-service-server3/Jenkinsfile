@@ -1,31 +1,43 @@
 pipeline {
     agent any
+    environment {
+//         HARBOR_CREDS = credentials('harbor-creds')
+//         K8S_CONFIG = credentials('k8s-jenkins ')
+//         HARBOR_HOST = 'harbor.local'
+    }
     stages {
-        /* "Build" and "Test" stages omitted */
-
-//         stage('check out') {
-//             steps {
-//                 git branch: 'master', credentialsId: 'github-jenkins-colddew', url: 'https://github.com/colddew/micro-service-springcloud.git'
-//             }
-//         }
-
-        stage('Deploy - Staging') {
+        stage('unit test') {
             steps {
-                echo './deploy staging'
-                echo './run-smoke-tests'
+                echo 'project build...'
+                sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
             }
         }
 
-        stage('Sanity check') {
+        stage('project build') {
             steps {
-                input "Does the staging environment look ok?"
+                echo 'project build...'
+                sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
+                stash excludes: '**/build/**', includes: '**', name: 'source'
             }
         }
 
-        stage('Deploy - Production') {
+        stage('docker build') {
             steps {
-                echo './deploy production'
+                unstash 'source'
+                echo 'docker build...'
             }
+        }
+
+        stage('k8s deploy') {
+            steps {
+                echo 'k8s deploy...'
+                input "Does the k8s environment look ok?"
+            }
+        }
+    }
+    post {
+        always {
+            deleteDir()
         }
     }
 }
