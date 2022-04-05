@@ -1,0 +1,105 @@
+version: '3'
+
+services:
+#  redis:
+#    image: redis:6.0.12
+#    container_name: redis
+#    ports:
+#      - 6379:6379
+#    networks:
+#      - microservice
+#    restart: always
+#    volumes:
+#      - "redis-data:/data"
+
+#  mysql:
+#    image: mysql:5.7.33
+#    container_name: mysql
+#    ports:
+#      - 3306:3306
+#    networks:
+#      - microservice
+#    volumes:
+#      - "mysql-data:/var/lib/mysql"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: mysqlPWD
+#    command:
+#      --character-set-server=utf8mb4
+#      --collation-server=utf8mb4_general_ci
+
+  nacos:
+    image: nacos/nacos-server
+    container_name: nacos
+    ports:
+      - 8848:8848
+    environment:
+      - "MODE=standalone"
+    networks:
+      - microservice
+  #      volumes:
+  #        - "nacos-logs:/home/nacos/logs/"
+  #      env_file:
+  #        - nacos/nacos-standlone-mysql.env
+  #      depends_on:
+  #        - mysql
+
+#  seata:
+#    image: seataio/seata-server:1.4.1
+#    environment:
+#      - "SEATA_CONFIG_NAME=file:/root/seata-config/registry"
+#    ports:
+#      - 8091:8091
+#    networks:
+#      - microservice
+#    volumes:
+#      - "./seata/:/root/seata-config/"
+#    restart: on-failure
+#    depends_on:
+#      - nacos
+#      - mysql
+
+#  gateway:
+#    build:
+#      context: ./micro-service-gateway
+#      dockerfile: Dockerfile
+#    container_name: micro-service-gateway
+#    ports:
+#      - 8080:8080
+#    networks:
+#      - microservice
+#    restart: on-failure
+#    volumes:
+#      - "/var/www/logs:/logs"
+#    environment:
+#      - "spring.cloud.nacos.discovery.server-addr=nacos:8848"
+#      - "spring.cloud.nacos.config.server-addr=nacos:8848"
+#      - "spring.cloud.sentinel.transport.dashboard=nacos:8718"
+#      - "spring.cloud.sentinel.datasource.ds1.nacos.server-addr=nacos:8848"
+
+  server3:
+#    build:
+#      context: ./micro-service-server3
+#      dockerfile: Dockerfile
+    image: cn.plantlink/micro-service-server3
+    ports:
+      - 8013:8013
+    networks:
+      - microservice
+#    volumes:
+#      - "/var/www/logs:/logs"
+#    depends_on:
+#      - nacos
+    environment:
+      - "SPRING_PROFILES_ACTIVE=k8s"
+#      - "spring.cloud.nacos.discovery.server-addr=nacos:8848"
+#      - "spring.cloud.nacos.config.server-addr=nacos:8848"
+#    restart: on-failure
+
+#volumes:
+#  redis-data:
+#  nacos-logs:
+#  mysql-data:
+
+networks:
+  microservice:
+    driver: bridge
