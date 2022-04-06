@@ -34,9 +34,10 @@ pipeline {
             steps {
                 unstash 'source'
                 echo 'docker build...'
-                // docker build -t cn.plantlink/micro-service-server3 .
-                echo '${env.BUILD_ID}'
-                def customImage = docker.build("cn.plantlink/micro-service-server3:${env.BUILD_ID}")
+//                 sh 'docker build -t cn.plantlink/micro-service-server3 .'
+                dir("${WORKSPACE}/micro-service-server3") {
+                    def customImage = docker.build("cn.plantlink/micro-service-server3:${env.BUILD_ID}")
+                }
             }
         }
 
