@@ -40,14 +40,8 @@ pipeline {
                 unstash 'source'
                 echo 'docker build...'
                 dir("${WORKSPACE}/micro-service-server3") {
-//                     script {
-//                         docker.withRegistry('https://registry.cn-hangzhou.aliyuncs.com', 'aliyun-registry') {
-//                             def customImage = docker.build("plantlink/micro-service-server3:${env.BUILD_ID}")
-//                             customImage.push()
-//                             customImage.clean()
-//                         }
-//                     }
-                    sh "docker build -t plantlink/micro-service-server3:${env.BUILD_ID} ."
+                    sh "docker build -t micro-service-server3:${env.BUILD_ID} ."
+                    sh "docker tag micro-service-server3:${env.BUILD_ID} ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
                     sh "docker login -u ${ALIYUN_REGISTRY_CRED_USR} -p ${ALIYUN_REGISTRY_CRED_PSW} ${ALIYUN_REGISTRY_HOST}"
                     sh "docker push ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
                 }
