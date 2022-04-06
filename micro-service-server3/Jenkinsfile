@@ -34,11 +34,10 @@ pipeline {
             steps {
                 unstash 'source'
                 echo 'docker build...'
-//                 sh 'docker build -t cn.plantlink/micro-service-server3 .'
                 dir("${WORKSPACE}/micro-service-server3") {
                     script {
                         docker.withRegistry('https://registry.cn-hangzhou.aliyuncs.com', 'aliyun-registry') {
-                            def customImage = docker.build("cn.plantlink/micro-service-server3:${env.BUILD_ID}")
+                            def customImage = docker.build("plantlink/micro-service-server3:${env.BUILD_ID}")
                             customImage.push()
                         }
                     }
