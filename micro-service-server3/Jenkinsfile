@@ -39,6 +39,7 @@ pipeline {
                         docker.withRegistry('https://registry.cn-hangzhou.aliyuncs.com', 'aliyun-registry') {
                             def customImage = docker.build("plantlink/micro-service-server3:${env.BUILD_ID}")
                             customImage.push()
+                            customImage.clean()
                         }
                     }
                 }
