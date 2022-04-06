@@ -37,7 +37,7 @@ pipeline {
 //                 sh 'docker build -t cn.plantlink/micro-service-server3 .'
                 dir("${WORKSPACE}/micro-service-server3") {
                     script {
-                        docker.withRegistry('registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3', 'aliyun-registry') {
+                        docker.withRegistry('https://registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3', 'aliyun-registry') {
                             def customImage = docker.build("micro-service-server3:${env.BUILD_ID}")
                             customImage.push()
                         }
