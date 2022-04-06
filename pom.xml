@@ -142,7 +142,7 @@
         <profile>
             <id>k8s</id>
             <properties>
-                <profile.active>test</profile.active>
+                <profile.active>k8s</profile.active>
             </properties>
         </profile>
     </profiles>

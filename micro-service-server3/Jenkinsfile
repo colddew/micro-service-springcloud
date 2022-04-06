@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                 echo 'project build...'
-//                 sh 'mvn -Pk8s clean test'
+                sh 'mvn -Pk8s clean test'
             }
         }
 
@@ -54,6 +54,7 @@ pipeline {
             steps {
                 echo 'k8s deploy...'
                 input "Does the k8s environment look ok?"
+                sh "docker run -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' micro-service-server3"
             }
         }
     }

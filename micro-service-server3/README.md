@@ -1,11 +1,17 @@
-# make docker image
+# build package of different environment
 ```
-# docker build --build-arg JAR_FILE=target/*.jar -t cn.plantlink/micro-service-server3 .
-docker build -t cn.plantlink/micro-service-server3 .
+# mvn clean package -Dmaven.test.skip=true -Pdev
+mvn clean package -Dmaven.test.skip=true -Pk8s
 ```
 
-# start docker container
+# build docker image
 ```
-# docker run -p 9999:9999 cn.plantlink/micro-service-server3
-docker run -p 8013:8013 -e "SPRING_PROFILES_ACTIVE=k8s" --network=micro-service-springcloud_microservice cn.plantlink/micro-service-server3
+# docker build --build-arg JAR_FILE=target/*.jar -t micro-service-server3 .
+docker build -t micro-service-server3 .
+```
+
+# run docker container
+```
+# docker run -p 8013:8013 micro-service-server3
+docker run -p 8013:8013 -e "SPRING_PROFILES_ACTIVE=k8s" micro-service-server3
 ```
