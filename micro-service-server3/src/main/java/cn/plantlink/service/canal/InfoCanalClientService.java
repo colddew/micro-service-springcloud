@@ -41,28 +41,31 @@ public class InfoCanalClientService {
     @PostConstruct
     private void init() throws Exception {
 
-        canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
-                canalClientProperties.getCanalDestinationInfo(), "", "");
-        canalConnector.connect();
-        canalConnector.subscribe("shizhifengyundb.tb_article," +
-                "shizhifengyundb.t_article_stock," +
-                "shizhifengyundb.tb_moments," +
-                "shizhifengyundb.t_non_text," +
-                "shizhifengyundb.t_express," +
-                "shizhifengyundb.t_express_stock");
+        if (BusinessConstants.CANAL_CLIENT_SWITCH_OPEN == canalClientProperties.getCanalClientSwitch()) {
 
-        CompletableFuture.runAsync(() -> {
-            try {
-                fetch();
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
-        });
+            canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
+                    canalClientProperties.getCanalDestinationInfo(), "", "");
+            canalConnector.connect();
+            canalConnector.subscribe("shizhifengyundb.tb_article," +
+                    "shizhifengyundb.t_article_stock," +
+                    "shizhifengyundb.tb_moments," +
+                    "shizhifengyundb.t_non_text," +
+                    "shizhifengyundb.t_express," +
+                    "shizhifengyundb.t_express_stock");
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    fetch();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            });
+        }
     }
 
     public void fetch() throws Exception {
 
-        while (BusinessConstants.CANAL_CLIENT_SWITCH_OPEN == canalClientProperties.getCanalClientSwitch()) {
+        while (true) {
 
             try {
                 Message message = canalConnector.getWithoutAck(BATCH_SIZE);

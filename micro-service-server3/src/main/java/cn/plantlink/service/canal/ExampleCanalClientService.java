@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,32 +35,35 @@ public class ExampleCanalClientService {
 
     private CanalConnector canalConnector;
 
-//    @PostConstruct
+    @PostConstruct
     private void init() throws Exception {
 
-        // support server failover locally
+        if (BusinessConstants.CANAL_CLIENT_SWITCH_OPEN == canalClientProperties.getCanalClientSwitch()) {
+
+            // support server failover locally
 //        canalConnector = CanalConnectors.newClusterConnector(Arrays.asList(new InetSocketAddress("59.110.124.213", 11111),
 //                new InetSocketAddress("39.106.229.248", 11111)),
 //                canalClientProperties.getCanalDestinationExample(), "", "");
 
-        // support server/client failover by zookeeper
-        canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
-                canalClientProperties.getCanalDestinationExample(), "", "");
-        canalConnector.connect();
-        canalConnector.subscribe(".*\\..*");
+            // support server/client failover by zookeeper
+            canalConnector = CanalConnectors.newClusterConnector(canalClientProperties.getZkServers(),
+                    canalClientProperties.getCanalDestinationExample(), "", "");
+            canalConnector.connect();
+            canalConnector.subscribe(".*\\..*");
 
-        CompletableFuture.runAsync(() -> {
-            try {
-                fetch();
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
-        });
+            CompletableFuture.runAsync(() -> {
+                try {
+                    fetch();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            });
+        }
     }
 
     public void fetch() throws Exception {
 
-        while (BusinessConstants.CANAL_CLIENT_SWITCH_OPEN == canalClientProperties.getCanalClientSwitch()) {
+        while (true) {
 
             try {
                 Message message = canalConnector.getWithoutAck(BATCH_SIZE);
