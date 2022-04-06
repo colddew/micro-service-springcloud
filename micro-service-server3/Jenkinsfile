@@ -36,8 +36,9 @@ pipeline {
                 echo 'docker build...'
 //                 sh 'docker build -t cn.plantlink/micro-service-server3 .'
                 dir("${WORKSPACE}/micro-service-server3") {
-                    def customImage = docker.build("cn.plantlink/micro-service-server3")
-//                     def customImage = docker.build("micro-service-server3")
+                    script {
+                        def customImage = docker.build("cn.plantlink/micro-service-server3")
+                    }
                 }
             }
         }
