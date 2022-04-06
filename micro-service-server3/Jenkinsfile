@@ -12,7 +12,7 @@ pipeline {
             }
             steps {
                 echo 'project build...'
-                sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
+                sh 'mvn -Pk8s clean test'
             }
         }
 
@@ -34,6 +34,9 @@ pipeline {
             steps {
                 unstash 'source'
                 echo 'docker build...'
+                // docker build -t cn.plantlink/micro-service-server3 .
+                echo '${env.BUILD_ID}'
+                def customImage = docker.build("cn.plantlink/micro-service-server3:${env.BUILD_ID}")
             }
         }
 
