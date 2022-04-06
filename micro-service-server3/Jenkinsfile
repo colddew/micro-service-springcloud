@@ -54,7 +54,7 @@ pipeline {
             steps {
                 echo 'k8s deploy...'
                 input "Does the k8s environment look ok?"
-                sh "docker run -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
+                sh "docker run -d -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' --name server3 ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
             }
         }
     }
