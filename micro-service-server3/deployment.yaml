@@ -23,5 +23,5 @@ spec:
           env:
             - name: JVM_OPTS
               value: "-Xms256m -Xmx256m"
-        imagePullSecrets:
-          - name: plantlinkRegistry
+      imagePullSecrets:
+        - name: plantlinkRegistry
