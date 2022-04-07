@@ -7,7 +7,7 @@ metadata:
     app: micro-service-server3
 spec:
   ports:
-    - port: 9999
+    - port: 8013
       targetPort: http
       protocol: TCP
       name: http

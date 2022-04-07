@@ -8,20 +8,18 @@ pipeline {
     }
 
     stages {
-        stage('unit test') {
-            agent {
-                docker {
-                    image 'maven:3.8.4-jdk-8'
-                    args '-v /Users/anmy/.m2/:/root/.m2'
-                }
-            }
+        stage('prepare') {
             steps {
-                echo 'project build...'
-                sh 'mvn -Pk8s clean test'
+                echo 'prepare...'
+                deleteDir()
+                script{
+                    env.GIT_COMMIT_ID = sh (script: 'git rev-parse --short HEAD ${GIT_COMMIT}', returnStdout: true).trim()
+                    echo '${GIT_COMMIT_ID}'
+                }
             }
         }
 
-        stage('project build') {
+        stage('build & test') {
             agent {
                 docker {
                     image 'maven:3.8.4-jdk-8'
@@ -30,21 +28,21 @@ pipeline {
             }
             steps {
                 echo 'project build...'
-                sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
+//                 sh 'mvn -Pk8s clean test'
+//                 sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
+                sh 'mvn -Pk8s clean package test
                 stash excludes: '**/build/**', includes: '**', name: 'source'
             }
         }
 
-        stage('docker build') {
+        stage('docker') {
             steps {
                 unstash 'source'
                 echo 'docker build...'
                 dir("${WORKSPACE}/micro-service-server3") {
-                    sh "docker build -t micro-service-server3:${env.BUILD_ID} ."
-                    sh "docker tag micro-service-server3:${env.BUILD_ID} ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
+                    sh "docker build -t ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID} ."
                     sh "docker login -u ${ALIYUN_REGISTRY_CRED_USR} -p ${ALIYUN_REGISTRY_CRED_PSW} ${ALIYUN_REGISTRY_HOST}"
                     sh "docker push ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
-                    sh "docker rmi micro-service-server3:${env.BUILD_ID}"
                     sh "docker rmi ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
                 }
             }
@@ -53,8 +51,18 @@ pipeline {
         stage('k8s deploy') {
             steps {
                 echo 'k8s deploy...'
+                sh 'kubectl version'
+                // trigger dingtalk notification
                 input "Does the k8s environment look ok?"
-                sh "docker run -d -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' --name server3 ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
+                // sh "docker run -d -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' --name server3 ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.BUILD_ID}"
+//                 dir("${WORKSPACE}/micro-service-server3") {
+//                     withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin-c70090b0f556944bf841e9d2d2134b355', credentialsId: 'devops-release-config', namespace: '', serverUrl: 'https://{k8s-release-ip}:6443') {
+//                         sh 'sed -i "s/{TAG}/${GIT_COMMIT_ID}/" ./deployment.yaml'
+//                         sh 'cat ./deployment.yaml'
+//                         sh 'kubectl apply -f ./deployment.yaml'
+//                         sh 'kubectl apply -f ./service.yaml'
+//                     }
+//                 }
             }
         }
     }
