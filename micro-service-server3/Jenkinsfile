@@ -53,7 +53,7 @@ pipeline {
         stage('k8s deploy') {
             agent {
                 docker {
-                    image 'bitnami/kubectl'
+                    image 'lwolf/helm-kubectl-docker'
                 }
             }
             steps {
