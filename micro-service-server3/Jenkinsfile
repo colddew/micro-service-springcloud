@@ -15,7 +15,9 @@ pipeline {
                 script {
 //                     env.GIT_COMMIT_ID = sh (script: 'git rev-parse --short HEAD ${GIT_COMMIT}', returnStdout: true).trim()
                     env.GIT_COMMIT_ID = "${GIT_COMMIT}".substring(0, 9).trim()
+                    echo "1..."
                     echo "${GIT_COMMIT_ID}"
+                    echo "2..."
                 }
                 sh 'printenv'
             }
