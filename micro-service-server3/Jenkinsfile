@@ -30,7 +30,7 @@ pipeline {
                 echo 'project build...'
 //                 sh 'mvn -Pk8s clean test'
 //                 sh 'mvn -Pk8s clean package -Dmaven.test.skip=true'
-                sh 'mvn -Pk8s clean package test
+                sh 'mvn -Pk8s clean package test'
                 stash excludes: '**/build/**', includes: '**', name: 'source'
             }
         }
