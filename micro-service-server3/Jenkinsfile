@@ -53,13 +53,13 @@ pipeline {
         stage('k8s deploy') {
             agent {
                 docker {
-                    image 'lwolf/helm-kubectl-docker'
+                    image 'dtzar/helm-kubectl'
                 }
             }
             steps {
                 echo 'k8s deploy...'
                 sh 'kubectl version'
-                // trigger dingtalk notification
+                // notify dingtalk
                 input "Does the k8s environment look ok?"
                 // sh "docker run -d -p 8013:8013 -e 'SPRING_PROFILES_ACTIVE=k8s' --name server3 ${ALIYUN_REGISTRY_HOST}/plantlink/micro-service-server3:${env.GIT_COMMIT_ID}"
 //                 dir("${WORKSPACE}/micro-service-server3") {
