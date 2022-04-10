@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-service-server3
+  namespace: micro-service
+spec:
+  selector:
+    matchLabels:
+      app: micro-service-server3
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: micro-service-server3
+    spec:
+      imagePullSecrets:
+        - name: plantlinkRegistry
+      containers:
+        - name: micro-service-server3
+          image: {Image_}registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3:{TAG}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8013
+              name: http
+          env:
+            - name: JVM_OPTS
+              value: "-Xms256m -Xmx256m"
