@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: micro-service
+  namespace: prod
   name: micro-service-server3
   labels:
     app: micro-service-server3
