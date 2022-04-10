@@ -13,8 +13,8 @@ spec:
       labels:
         app: micro-service-server3
     spec:
-      imagePullSecrets:
-        - name: plantlinkRegistry
+#      imagePullSecrets:
+#        - name: plantlinkRegistry
       containers:
         - name: micro-service-server3
           image: registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3:{TAG}
@@ -22,6 +22,6 @@ spec:
           ports:
             - containerPort: 8013
               name: http
-          env:
-            - name: JVM_OPTS
-              value: "-Xms256m -Xmx256m"
+#          env:
+#            - name: JVM_OPTS
+#              value: "-Xms256m -Xmx256m"
