@@ -17,7 +17,7 @@ spec:
         - name: plantlinkRegistry
       containers:
         - name: micro-service-server3
-          image: {Image_}registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3:{TAG}
+          image: registry.cn-hangzhou.aliyuncs.com/plantlink/micro-service-server3:{TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8013

@@ -69,10 +69,10 @@ pipeline {
                         sh 'sed -i "s/{TAG}/${GIT_COMMIT_ID}/g" deployment.yaml'
                         sh 'cat deployment.yaml'
                         sh 'kubectl version'
-                        sh 'kubectl cluster-info'
-                        sh 'kubectl get node'
-//                         sh 'kubectl apply -f deployment.yaml'
-//                         sh 'kubectl apply -f service.yaml'
+//                         sh 'kubectl cluster-info'
+//                         sh 'kubectl get node'
+                        sh 'kubectl apply -f deployment.yaml'
+                        sh 'kubectl apply -f service.yaml'
                     }
                 }
             }
