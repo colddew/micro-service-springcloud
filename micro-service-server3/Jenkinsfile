@@ -67,8 +67,8 @@ pipeline {
                 dir("${WORKSPACE}/micro-service-server3/k8s") {
 //                     withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin-xxx', credentialsId: 'k8s-config', namespace: '', serverUrl: 'https://{k8s-api-server-ip}:6443') {
                     withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin-cba1e0b150eaf408c95071aa07fd9aa28', credentialsId: 'k8s-config', namespace: '', serverUrl: 'https://121.40.75.157:6443') {
-                        sh 'sed -i "s/{TAG}/${GIT_COMMIT_ID}/g" deployment.yaml'
-                        sh 'cat deployment.yaml'
+//                         sh 'sed -i "s/{TAG}/${GIT_COMMIT_ID}/g" deployment.yaml'
+//                         sh 'cat deployment.yaml'
                         sh 'kubectl version'
                         sh 'kubectl cluster-info'
                         sh 'kubectl get node'
